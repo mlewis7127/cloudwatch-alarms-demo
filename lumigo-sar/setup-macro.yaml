@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Template to set up ledger and roles
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  SARCloudwatchAlarmsLayer:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location:
+        ApplicationId: arn:aws:serverlessrepo:us-east-1:374852340823:applications/cloudwatch-alarms-macro
+        SemanticVersion: 1.0.3
+      Parameters:
+        DefaultConfigParamName: /alarms/defaultConfig
+        MacroName: AddCloudWatchAlarms

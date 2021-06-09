@@ -1,0 +1,39 @@
+service: matttest
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  stage: ${opt:stage, 'dev'}
+  region: eu-west-1
+
+
+functions:
+  lumigoSar:
+    handler: functions/lumigo-sar.handler
+    events:
+      - http:
+          path: /lumigo-sar
+          method: get
+
+resources:
+  Transform:
+    - AddCloudWatchAlarms
+
+  Parameters:
+    MacroParamStage:
+      Type: String
+      Default: ${self:provider.stage}
+    MacroParamTopicArn:
+      Type: String
+      Description: The ARN of the SNS topic to use in the alarms.
+      Default: "arn:aws:sns:#{AWS::Region}:#{AWS::AccountId}:AlarmTopic"
+
+  Resources:
+
+    AlarmTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: "AlarmTopic"
